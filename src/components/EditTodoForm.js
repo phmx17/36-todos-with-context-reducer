@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TextField, IconButton } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel'  // no destructuring allowed;
 import useInputState from '../hooks/useInputState';
+import { TodosContext } from '../context/todos.context'; // using context now to pass all functionality to components
 
-const EditTodoForm = (props) => {
-  const [value, handleChange, reset] = useInputState(props.task); // passing values and function from hook component  
-  
+const EditTodoForm = ({ id, task, toggleEdit }) => {
+  console.log(toggleEdit);
+  const [value, handleChange, reset] = useInputState(task); // passing values and function from hook component  
+  // const { editTodo } = useContext(TodosContext); // using reducer inside context now
+  const { dispatch } = useContext(TodosContext);
   const submitForm = (e) => {
     e.preventDefault();
-    props.editTodo(props.id, value);      
+    dispatch({ type: 'EDIT', id: id, newTask: value });      
     reset();
-    props.toggleEdit(false);
+    toggleEdit(false);
   }
 
   return (
@@ -29,7 +32,7 @@ const EditTodoForm = (props) => {
         autoFocus // prevent having to click into the field            
       />
 
-      <IconButton onClick={() => props.toggleEdit(false)} style={{ display: 'inline-block' }} >
+      <IconButton onClick={() => toggleEdit(false)} style={{ display: 'inline-block' }} >
         <CancelIcon />
       </IconButton>
 

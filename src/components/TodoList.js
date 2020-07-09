@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Todo from './Todo';
+import { TodosContext } from '../context/todos.context';
 
-const TodoList = ({todos, removeTodo, toggleTodo, editTodo }) => {
+const TodoList = () => {
+  const { todos } = useContext(TodosContext);
   if (todos.length) // check if non-zero todos, which otherwise renders an ugly empty list
     return (
       <Paper>
@@ -13,12 +15,9 @@ const TodoList = ({todos, removeTodo, toggleTodo, editTodo }) => {
             <>  {/* neat trick to avoid jsx complaining about sibling components */}
               <Todo                 
                 {...todo} // passes id, task and completed; very kewl
-                key={todo.id} 
-                removeTodo={removeTodo}
-                toggleTodo={toggleTodo}
-                editTodo={editTodo}
+                key={todo.id}                 
               />
-              {i < todos.length -1 && <Divider />} {/* Divider while index is smaller than length of array */}              
+              {i < todos.length -1 && <Divider />} {/* Divider while index is smaller than length of array; removes ugly display when zero todos */}              
             </> 
           ))}
         </List>
